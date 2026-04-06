@@ -2,6 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
+import plotly.graph_objects as go
 from src.fundamental_score import calculate_fundamental_score
 from src.scores import calculate_stock_score
 from src.get_data_for_scoring_yfinance import get_data
@@ -38,6 +39,58 @@ Be direct and simple. No bullet points, just plain paragraphs.
     return response.text
 
 
+def plot_fundamental_chart(fundamental_details, ticker):
+    labels = list(fundamental_details.keys())
+    values = [1 if v == '✅' else 0 for v in fundamental_details.values()]
+    colors = ['#2ecc71' if v == 1 else '#e74c3c' for v in values]
+
+    fig = go.Figure(go.Bar(
+        x=labels,
+        y=values,
+        marker_color=colors,
+        text=['Pass' if v == 1 else 'Fail' for v in values],
+        textposition='outside'
+    ))
+    fig.update_layout(
+        title=f'Fundamental Health Check — {ticker}',
+        yaxis=dict(tickvals=[0, 1], ticktext=['Fail', 'Pass'], range=[-0.2, 1.5]),
+        xaxis_tickangle=-30,
+        height=400,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white')
+    )
+    return fig
+
+
+def plot_key_metrics_chart(metrics, ticker):
+    keys = ['P/E Ratio', 'ROE (%)', 'Net Profit Margin (%)', 'D/E Ratio',
+            'RSI', 'Beta', 'Dividend Yield (%)', 'Revenue Growth (%)']
+    labels = []
+    values = []
+    for k in keys:
+        if metrics.get(k) is not None:
+            labels.append(k)
+            values.append(round(float(metrics[k]), 2))
+
+    fig = go.Figure(go.Bar(
+        x=labels,
+        y=values,
+        marker_color='#3498db',
+        text=values,
+        textposition='outside'
+    ))
+    fig.update_layout(
+        title=f'Key Financial Metrics — {ticker}',
+        xaxis_tickangle=-30,
+        height=400,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white')
+    )
+    return fig
+
+
 st.sidebar.title("Navigation")
 menu_option = st.sidebar.selectbox("Select a section", ['Stock Score'])
 
@@ -59,6 +112,7 @@ if menu_option == 'Stock Score':
             st.stop()
 
         st.write(fundamental_details)
+        st.plotly_chart(plot_fundamental_chart(fundamental_details, query), use_container_width=True)
 
         with st.spinner('Fetching scoring metrics...'):
             metrics = get_data(stock_symbol=query + '.NS')
@@ -66,6 +120,8 @@ if menu_option == 'Stock Score':
         if metrics is None:
             st.error(f"Could not fetch scoring data for '{query}'. Check the ticker symbol or try again in a moment.")
             st.stop()
+
+        st.plotly_chart(plot_key_metrics_chart(metrics, query), use_container_width=True)
 
         score = calculate_stock_score(metrics=metrics)
         st.header(f"Overall score of {query} is: {round(score, 2)}")
@@ -77,4 +133,3 @@ if menu_option == 'Stock Score':
 
         st.subheader("AI Analysis")
         st.write(explanation)
-
