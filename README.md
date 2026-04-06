@@ -1,11 +1,10 @@
 # Stock Scoring System
 
-A rule and weight-based system for evaluating NSE-listed stocks based on fundamental, technical, risk, and market parameters. The system assigns a score between 0 and 1, and uses Google Gemini AI to generate a plain English analysis of the result.
+A rule and weight-based system for evaluating NSE-listed stocks based on fundamental, technical, risk, and market parameters. The system assigns a score between 0 and 1, and uses Google Gemini AI to generate an analysis of the result.
 
 - **Score >= 0.5** — Favorable buying opportunity
 - **Score < 0.5** — Favorable selling/short opportunity
 
----
 
 ## UI Preview
 
@@ -13,7 +12,6 @@ A rule and weight-based system for evaluating NSE-listed stocks based on fundame
 <img width="1453" height="419" alt="image" src="https://github.com/user-attachments/assets/5efc46e0-2b44-46ef-847f-64769943b20f" />
 
 
----
 
 ## How It Works
 
@@ -23,7 +21,6 @@ A rule and weight-based system for evaluating NSE-listed stocks based on fundame
 4. A weighted score is computed across four categories and displayed with a buy/sell recommendation.
 5. Google Gemini AI analyses the score and metrics and generates a plain English investment summary.
 
----
 
 ## Scoring Methodology
 
@@ -34,9 +31,8 @@ A rule and weight-based system for evaluating NSE-listed stocks based on fundame
 | Risk Factors | 20% |
 | Other Factors | 10% |
 
-The final score is a weighted sum across ~30 metrics including P/E ratio, ROE, MACD, RSI, Bollinger Bands, Beta, ATR, and more.
+The final score is a weighted sum across ~30 metrics, including P/E ratio, ROE, MACD, RSI, Bollinger Bands, Beta, ATR, and more.
 
----
 
 ## Installation and Setup
 
@@ -71,7 +67,9 @@ The `.env` file is git-ignored and will never be pushed to GitHub.
 streamlit run main.py
 ```
 
----
+
+
+
 
 ## Usage Notes
 
@@ -92,7 +90,8 @@ streamlit run main.py
 - **Plotly** — charting
 - **Google Gemini AI** — investment analysis
 
----
+
+
 
 
 ## Future Improvements
@@ -100,13 +99,15 @@ streamlit run main.py
 - Agentic AI and RAG integration for natural language stock analysis
 - Support for BSE-listed stocks and international markets
 
----
+
+
 
 ## Original Author
 
 This project was originally created by [Shubham Mandowara](https://github.com/ShubhamMandowara). Bug fixes and AI integration by contributor.
 
----
+
+
 
 ## License
 
